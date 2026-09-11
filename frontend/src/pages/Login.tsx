@@ -72,6 +72,7 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 export const Login = () => {
   const setUser = useAuthStore((state) => state.setUser);
   const user = useAuthStore((state) => state.user);
+  const setTenantId = useAuthStore((state) => state.setTenantId);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [openToastr, setOpenToastr] = useState(false);
@@ -111,8 +112,12 @@ export const Login = () => {
     }
 
     try {
-      const authData = await loginUser(formData.email, formData.password);
+      const authData = await loginUser(formData.email, formData.password, useAuthStore.getState().tenantId);
       setUser(authData.user);
+      useAuthStore.getState().setTokens(authData.access_token, authData.refresh_token);
+      if (authData.tenant?.id) {
+        setTenantId(String(authData.tenant.id));
+      }
       if (authData.must_change_password || authData.user?.must_change_password) {
         navigate('/change-password', { replace: true });
       } else {

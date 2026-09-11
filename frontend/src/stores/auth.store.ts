@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { getTenants } from '@/services/api.service';
+import { getTenants, switchTenantToken } from '@/services/api.service';
 
 export interface AuthUser {
   id: number;
@@ -21,13 +21,17 @@ interface AuthState {
   user: AuthUser | null;
   setUser: (user: AuthUser | null) => void;
 
+  accessToken: string | null;
+  refreshToken: string | null;
+  setTokens: (accessToken: string, refreshToken: string) => void;
+
   tenantId: string | null;
   setTenantId: (tenantId: string | null) => void;
 
   tenants: TenantInfo[];
   setTenants: (tenants: TenantInfo[]) => void;
   fetchTenants: () => Promise<TenantInfo[]>;
-  switchTenant: (tenantId: string | number) => void;
+  switchTenant: (tenantId: string | number) => Promise<void>;
 
   clearAuth: () => void;
 }
@@ -36,10 +40,14 @@ export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       user: null,
+      accessToken: null,
+      refreshToken: null,
       tenantId: null,
       tenants: [],
 
       setUser: (user) => set({ user }),
+
+      setTokens: (accessToken, refreshToken) => set({ accessToken, refreshToken }),
 
       setTenantId: (tenantId) => set({ tenantId: tenantId ? String(tenantId) : null }),
 
@@ -56,13 +64,20 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      switchTenant: (tenantId) => {
-        set({ tenantId: String(tenantId) });
+      switchTenant: async (tenantId) => {
+        const tokens = await switchTenantToken(tenantId);
+        set({
+          tenantId: String(tenantId),
+          accessToken: tokens.access_token,
+          refreshToken: tokens.refresh_token,
+        });
       },
 
       clearAuth: () =>
         set({
           user: null,
+          accessToken: null,
+          refreshToken: null,
           tenantId: null,
           tenants: [],
         }),
@@ -73,6 +88,8 @@ export const useAuthStore = create<AuthState>()(
 
       partialize: (state) => ({
         user: state.user,
+        accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
         tenantId: state.tenantId,
         tenants: state.tenants,
       }),

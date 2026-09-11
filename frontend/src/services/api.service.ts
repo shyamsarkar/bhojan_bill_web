@@ -173,12 +173,12 @@ export const apiClient = async <TResponse>({
 };
 
 // Users
-export const loginUser = async (email: string, password: string) => {
-  return apiClient<{ user: AuthUser; tenant?: { id: string; name: string }; must_change_password?: boolean; message?: string }>({
+export const loginUser = async (email: string, password: string, tenantId?: string | null) => {
+  return apiClient<{ user: AuthUser; tenant?: { id: string; name: string }; access_token: string; refresh_token: string; membership: { id: number; role: string }; must_change_password?: boolean; message?: string }>({
     method: "post",
     url: "/users/sign_in",
     data: {
-      user: { email, password },
+      user: { email, password, ...(tenantId ? { tenant_id: tenantId } : {}) },
     },
   });
 };
@@ -195,6 +195,14 @@ export const logoutUser = async () => {
   return apiClient<void>({
     method: "delete",
     url: "/users/sign_out",
+  });
+};
+
+export const switchTenantToken = async (tenantId: string | number) => {
+  return apiClient<{ access_token: string; refresh_token: string }>({
+    method: "post",
+    url: "/api/v1/tokens/switch-tenant",
+    data: { tenant_id: tenantId },
   });
 };
 

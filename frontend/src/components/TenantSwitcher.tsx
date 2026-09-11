@@ -35,7 +35,7 @@ export const TenantSwitcher: React.FC = () => {
     }
 
     const targetTenant = ownerTenants.find((t) => String(t.id) === String(newTenantId));
-    switchTenant(newTenantId);
+    void switchTenant(newTenantId);
     showToast(`Switched branch to ${targetTenant?.name || 'new branch'}`, 'success');
 
     // Refresh current route via React Router navigation (remounts active route under new tenant header)

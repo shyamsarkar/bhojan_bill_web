@@ -7,12 +7,17 @@ const api = axios.create({
     'Content-Type': 'application/json',
     'Accept': 'application/json',
   },
-  withCredentials: true,
+  withCredentials: false,
 });
 
 
 api.interceptors.request.use((config) => {
   const tenantId = useAuthStore.getState().tenantId
+  const accessToken = useAuthStore.getState().accessToken
+
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`
+  }
 
   if (tenantId) {
     config.headers['X-Tenant-ID'] = tenantId
