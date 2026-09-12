@@ -41,7 +41,7 @@ function ResponsiveAppBar() {
               textDecoration: 'none',
             }}
           >
-            MealDesk
+            BhojanBill
           </Typography>
 
           <Box sx={{ flexGrow: 0 }}>

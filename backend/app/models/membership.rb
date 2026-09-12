@@ -5,6 +5,8 @@ class Membership < ApplicationRecord
   belongs_to :tenant
   acts_as_tenant :tenant
 
+  has_many :auth_tokens, dependent: :destroy
+
   enum :role, { owner: 0, admin: 1, manager: 2, cashier: 3, waiter: 4 }
 
   validates :user_id, presence: true

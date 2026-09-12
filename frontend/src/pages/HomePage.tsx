@@ -61,7 +61,7 @@ export const HomePage: React.FC = () => {
       const created = await createTenant({ name: newTenantName.trim() });
       setIsModalOpen(false);
       setNewTenantName('');
-      
+
       // Auto-select newly created tenant branch and navigate to POS
       setTenantId(created.id);
       navigate('/');
@@ -180,7 +180,7 @@ export const HomePage: React.FC = () => {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. MealDesk Downtown"
+                  placeholder="e.g. BhojanBill Downtown"
                   value={newTenantName}
                   onChange={(e) => setNewTenantName(e.target.value)}
                   className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all"

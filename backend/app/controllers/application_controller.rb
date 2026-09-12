@@ -3,8 +3,7 @@
 class ApplicationController < ActionController::Base
   skip_before_action :verify_authenticity_token
 
-  # Devise authentication
-  before_action :authenticate_user!
+  before_action :authenticate_request!
   before_action :set_current_context
 
   # CanCanCan
@@ -18,32 +17,33 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  attr_reader :current_membership
+
+  def authenticate_request!
+    token = request.headers['Authorization'].to_s[/\ABearer\s+(.+)\z/i, 1]
+    raise JwtService::InvalidToken, 'Missing bearer token' if token.blank?
+
+    payload = JwtService.decode(token)
+    @current_membership = Membership.includes(:user, :tenant).find(payload.fetch(:membership_id))
+    render json: { error: 'Unauthorized' }, status: :unauthorized unless @current_membership.user.is_active?
+  rescue KeyError, ActiveRecord::RecordNotFound, JwtService::InvalidToken
+    render json: { error: 'Unauthorized' }, status: :unauthorized
+  end
+
   # Optional: expose current ability explicitly (good practice)
   def current_ability
     @current_ability ||= Ability.new(current_user, Current.tenant)
+  end
+
+  def current_user
+    current_membership&.user
   end
 
   private
 
   def set_current_context
     Current.user = current_user
-
-    tenant_id = request.headers['X-Tenant-ID']
-
-    if tenant_id.blank?
-      render json: { error: 'Tenant not selected' }, status: :forbidden
-      return
-    end
-
-    Current.membership = current_user.memberships
-                                     .includes(:tenant)
-                                     .find_by(tenant_id: tenant_id)
-
-    unless Current.membership
-      render json: { error: 'Access denied for selected tenant' }, status: :forbidden
-      return
-    end
-
+    Current.membership = current_membership
     Current.tenant = Current.membership.tenant
 
     unless Current.tenant.active?
@@ -55,6 +55,6 @@ class ApplicationController < ActionController::Base
   end
 
   def current_tenant
-    Current.tenant
+    current_membership&.tenant
   end
 end

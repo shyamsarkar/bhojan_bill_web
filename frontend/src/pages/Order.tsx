@@ -154,7 +154,7 @@ export const OrderPage = () => {
     setSelectedTable(table);
     setSelectedCustomer(null);
     setCustomerPhone("");
-    
+
     if (table.current_order_id) {
       try {
         const orderData = await getOrder(table.current_order_id);
@@ -364,7 +364,7 @@ export const OrderPage = () => {
   });
 
   return (
-    <Box 
+    <Box
       className="flex flex-col h-full w-full min-h-0 min-w-0 p-3 md:p-4 bg-slate-100 rounded-xl shadow-sm border border-slate-200 overflow-hidden"
     >
       {/* Top action buttons */}
@@ -424,13 +424,12 @@ export const OrderPage = () => {
                     <Card
                       variant="outlined"
                       onClick={() => handleSelectTable(t)}
-                      className={`cursor-pointer transition-all duration-200 hover:scale-[1.03] ${
-                        t.status === "occupied"
+                      className={`cursor-pointer transition-all duration-200 hover:scale-[1.03] ${t.status === "occupied"
                           ? "bg-amber-50 border-amber-300"
                           : t.status === "billed"
-                          ? "bg-emerald-50 border-emerald-300"
-                          : "bg-white border-slate-200"
-                      }`}
+                            ? "bg-emerald-50 border-emerald-300"
+                            : "bg-white border-slate-200"
+                        }`}
                     >
                       <CardContent className="text-center p-6">
                         <Typography variant="h6" className="font-bold text-slate-800">
@@ -465,7 +464,7 @@ export const OrderPage = () => {
                   New Takeaway Order
                 </Button>
               </Box>
-              
+
               {activeParcelOrders.length === 0 ? (
                 <Paper variant="outlined" className="p-6 text-center text-slate-500">
                   No active takeaway orders. Click "New Takeaway Order" to start.
@@ -705,10 +704,10 @@ export const OrderPage = () => {
                         type="number"
                         size="small"
                         style={{ width: 52 }}
-                        inputProps={{ 
-                          min: 0, 
-                          max: 100, 
-                          style: { padding: '4px 6px', fontSize: '12px', textAlign: 'center' } 
+                        inputProps={{
+                          min: 0,
+                          max: 100,
+                          style: { padding: '4px 6px', fontSize: '12px', textAlign: 'center' }
                         }}
                         value={discountPct}
                         onChange={(e) => {
@@ -726,9 +725,9 @@ export const OrderPage = () => {
                         type="number"
                         size="small"
                         style={{ width: 52 }}
-                        inputProps={{ 
-                          min: 0, 
-                          style: { padding: '4px 6px', fontSize: '12px', textAlign: 'center' } 
+                        inputProps={{
+                          min: 0,
+                          style: { padding: '4px 6px', fontSize: '12px', textAlign: 'center' }
                         }}
                         value={serviceChargePct}
                         onChange={(e) => {
@@ -903,7 +902,7 @@ export const OrderPage = () => {
             <Grid item xs={12} md={6}>
               <Paper variant="outlined" className="p-4 bg-yellow-50/30 border-yellow-200 font-mono text-xs max-h-96 overflow-y-auto">
                 <Typography className="text-center font-bold mb-1">*** RECEIPT PREVIEW ***</Typography>
-                <Typography className="text-center mb-3">MealDesk Billing System</Typography>
+                <Typography className="text-center mb-3">BhojanBill Billing System</Typography>
                 <Divider className="my-1 border-dashed" />
                 <Typography>Order ID: #{currentOrder?.id}</Typography>
                 <Typography>{selectedTable ? `Table: ${selectedTable.name}` : "Type: Takeaway"}</Typography>

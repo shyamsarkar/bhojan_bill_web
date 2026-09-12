@@ -16,7 +16,7 @@ Tenant.delete_all
 User.delete_all
 puts 'Database cleaned!'
 
-email = ENV["DEFAULT_OWNER_EMAIL"] || "owner@mealdesk.com"
+email = ENV["DEFAULT_OWNER_EMAIL"] || "owner@bhojanbill.com"
 password = ENV["DEFAULT_OWNER_PASSWORD"] || "password123"
 
 puts 'Creating owner user...'

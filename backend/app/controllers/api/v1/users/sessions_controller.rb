@@ -3,33 +3,42 @@
 module Api
   module V1
     module Users
-      class SessionsController < Devise::SessionsController
-        respond_to :json
-        skip_before_action :verify_authenticity_token, raise: false
-        skip_before_action :set_current_context, only: [:create, :destroy]
+      class SessionsController < ApplicationController
+        skip_before_action :authenticate_request!
+        skip_before_action :set_current_context
+
+        def create
+          user = User.find_by(email: params.dig(:user, :email)&.downcase || params[:email]&.downcase)
+          password = params.dig(:user, :password) || params[:password]
+          membership = membership_for(user)
+
+          unless user&.valid_password?(password.to_s) && user.is_active? && membership
+            render json: { error: 'Invalid email, password, or tenant' }, status: :unauthorized
+            return
+          end
+
+          user.update_column(:last_login_time, Time.current)
+          render json: TokenService.issue_for(membership).merge(
+            user: user.slice(:id, :email, :first_name, :last_name, :is_active, :last_login_time),
+            tenant: membership.tenant,
+            membership: { id: membership.id, role: membership.role },
+            must_change_password: user.must_change_password?
+          ), status: :ok
+        end
+
+        def destroy
+          TokenService.revoke(params[:refresh_token]) if params[:refresh_token].present?
+          head :no_content
+        end
 
         private
 
-        def respond_with(resource, _opts = {})
-          resource.update_column(:last_login_time, Time.current)
+        def membership_for(user)
+          return unless user
 
-          if resource.must_change_password?
-            render json: {
-              must_change_password: true,
-              user: resource.slice(:id, :email, :first_name, :last_name, :is_active, :last_login_time).merge(must_change_password: true),
-              message: 'Please change your password'
-            }, status: :ok
-          else
-            render json: {
-              user: resource.slice(:id, :email, :first_name, :last_name, :is_active, :last_login_time),
-              tenant: resource.tenants.first,
-              message: 'Signed in successfully'
-            }, status: :ok
-          end
-        end
-
-        def respond_to_on_destroy(*_args, **_opts)
-          render json: { message: 'Signed out successfully' }, status: :ok
+          tenant_id = params[:tenant_id] || params.dig(:user, :tenant_id) || request.headers['X-Tenant-ID']
+          memberships = user.memberships.includes(:tenant)
+          tenant_id.present? ? memberships.find_by(tenant_id: tenant_id) : memberships.first if memberships.one? || tenant_id.present?
         end
       end
     end

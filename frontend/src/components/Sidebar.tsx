@@ -1,15 +1,15 @@
 import React, { useState, useMemo } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 
-import { 
-  Home, 
-  ShoppingCart, 
-  TableRestaurant, 
-  Kitchen as KitchenIcon, 
-  MenuBook, 
-  PeopleAlt, 
+import {
+  Home,
+  ShoppingCart,
+  TableRestaurant,
+  Kitchen as KitchenIcon,
+  MenuBook,
+  PeopleAlt,
   Group,
-  BarChart, 
+  BarChart,
   Settings as SettingsIcon,
   ChevronLeft,
   ChevronRight,
@@ -50,8 +50,8 @@ const Sidebar: React.FC = () => {
 
   const userInitials = user
     ? (
-        (user.first_name?.[0] || '') + (user.last_name?.[0] || user.email?.[0] || 'U')
-      ).toUpperCase()
+      (user.first_name?.[0] || '') + (user.last_name?.[0] || user.email?.[0] || 'U')
+    ).toUpperCase()
     : 'MD';
 
   const roleName = currentTenant?.role
@@ -75,14 +75,13 @@ const Sidebar: React.FC = () => {
   }, [currentTenant?.role]);
 
   return (
-    <div className={`fixed left-0 top-0 h-full flex flex-col bg-slate-900 text-slate-100 shadow-xl z-50 transition-all duration-300 ease-in-out ${
-      showSidebar ? 'w-56' : 'w-16'
-    }`}>
+    <div className={`fixed left-0 top-0 h-full flex flex-col bg-slate-900 text-slate-100 shadow-xl z-50 transition-all duration-300 ease-in-out ${showSidebar ? 'w-56' : 'w-16'
+      }`}>
       {/* Header */}
       <div className="flex-shrink-0 flex items-center justify-between p-3 border-b border-slate-800">
         <div className={`flex items-center space-x-3 ${showSidebar ? 'opacity-100' : 'opacity-0'} transition-opacity duration-200 ${showSidebar ? '' : 'hidden'}`}>
           <h1 onClick={handleNavigate} className="cursor-pointer text-lg font-bold bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent whitespace-nowrap">
-            MealDesk
+            BhojanBill
           </h1>
         </div>
         <button
@@ -110,10 +109,9 @@ const Sidebar: React.FC = () => {
               <NavLink
                 to={item.path}
                 className={({ isActive }) =>
-                  `flex items-center px-3 py-2 rounded-lg transition-all duration-200 group relative ${
-                    isActive
-                      ? 'bg-blue-600/90 text-white font-medium shadow-md shadow-blue-900/30'
-                      : 'text-slate-400 hover:bg-slate-800 hover:text-slate-100'
+                  `flex items-center px-3 py-2 rounded-lg transition-all duration-200 group relative ${isActive
+                    ? 'bg-blue-600/90 text-white font-medium shadow-md shadow-blue-900/30'
+                    : 'text-slate-400 hover:bg-slate-800 hover:text-slate-100'
                   }`
                 }
               >
@@ -121,7 +119,7 @@ const Sidebar: React.FC = () => {
                 <span className={`ml-3 text-sm font-medium whitespace-nowrap ${showSidebar ? 'opacity-100' : 'opacity-0 w-0 overflow-hidden'} transition-all duration-200`}>
                   {item.label}
                 </span>
-                
+
                 {/* Tooltip for collapsed state */}
                 {!showSidebar && (
                   <div className="absolute left-full ml-3 px-2 py-1 bg-slate-800 text-slate-100 text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 pointer-events-none">
@@ -139,9 +137,8 @@ const Sidebar: React.FC = () => {
         <div className="relative">
           <button
             onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-            className={`flex items-center w-full p-2 rounded-lg hover:bg-slate-800 transition-colors duration-200 ${
-              showSidebar ? 'space-x-3' : 'justify-center'
-            }`}
+            className={`flex items-center w-full p-2 rounded-lg hover:bg-slate-800 transition-colors duration-200 ${showSidebar ? 'space-x-3' : 'justify-center'
+              }`}
             title={`${displayName} (${roleName})`}
           >
             <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-amber-500 rounded-full flex items-center justify-center flex-shrink-0 shadow">

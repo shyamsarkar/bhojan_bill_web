@@ -1,4 +1,4 @@
-# MealDesk
+# BhojanBillWeb
 
 Multi-tenant restaurant billing system built with Ruby on Rails 8, ReactJS 19, and PostgreSQL 16.
 

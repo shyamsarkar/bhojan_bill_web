@@ -40,7 +40,7 @@ const Restaurants: React.FC = () => {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Live Dashboard</h1>
-        <p className="text-gray-600">Welcome to MealDesk POS. Realtime operational overview.</p>
+        <p className="text-gray-600">Welcome to BhojanBill POS. Realtime operational overview.</p>
       </div>
 
       {/* Stats Grid */}

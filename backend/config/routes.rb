@@ -47,6 +47,9 @@ Rails.application.routes.draw do
       resources :kots, only: %i[index update]
 
       resources :reports, only: %i[index]
+      post '/tokens/refresh', to: 'tokens#refresh'
+      post '/tokens/switch-tenant', to: 'tokens#switch_tenant'
+      delete '/tokens', to: 'tokens#destroy'
     end
   end
 end
